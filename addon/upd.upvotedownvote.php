@@ -7,8 +7,35 @@ class Upvotedownvote_upd {
 	function install()
 	{
 
-		// Include db_setup for install
-		include_once 'setup/db_setup.php';
+		// Database setup
+		ee()->load->dbforge();
+
+		// Create channel_fields pivot tables (2)
+		ee()->dbforge->drop_table('json_ld_templates');
+
+		$fields = array(
+			'entry_id' => array(
+				'type' => 'INT',
+				'constraint' => 5,
+				'unsigned' => TRUE			
+			),
+			'upvotes' => array(
+				'type' => 'INT',
+				'constraint' => 5,
+				'unsigned' => TRUE
+			),
+			'downvotes' => array(
+				'type' => 'INT',
+				'constraint' => 5,
+				'unsigned' => TRUE
+			)
+		);
+
+		ee()->dbforge->add_field('id');
+		ee()->dbforge->add_field($fields);
+		ee()->dbforge->create_table('upvotedownvote');
+
+		unset($fields);
 
 		// APP INFO
 		$data = array(
@@ -42,19 +69,18 @@ class Upvotedownvote_upd {
 	function uninstall() {
 		ee()->load->dbforge();
 
-		ee()->dbforge->drop_table('json_ld_templates');
+		ee()->dbforge->drop_table('upvotedownvote');
 
-		ee()->db->where('module_name', 'Json_ld');
+		ee()->db->where('module_name', 'Upvotedownvote');
 		ee()->db->delete('modules');
 
-		ee()->db->where('class', 'Json_ld');
+		ee()->db->where('class', 'Upvotedownvote');
 		ee()->db->delete('actions');
 
 		ee()->load->library('layout');
-		// ee()->layout->delete_layout_tabs($this->tabs(), 'json_ld');
 
 		return true;
 	}
 }
 
-/* End of file upd.json_ld.php */
+/* End of file upd.upvotedownvote.php */
