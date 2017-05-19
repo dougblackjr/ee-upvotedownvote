@@ -11,7 +11,7 @@ class Upvotedownvote_upd {
 		ee()->load->dbforge();
 
 		// Create channel_fields pivot tables (2)
-		ee()->dbforge->drop_table('json_ld_templates');
+		ee()->dbforge->drop_table('upvotedownvote');
 
 		$fields = array(
 			'entry_id' => array(
