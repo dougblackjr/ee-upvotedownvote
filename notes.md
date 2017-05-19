@@ -16,3 +16,8 @@ NUMBER - UP - DOWN
 + entry_id: integer
 + upvotes: integer
 + downvotes: integer
+
+### Module
+Module will get entry and display
++ entry: id for which entry you want data about.
++ display: whether to display "numbers", "thumbs", "all" (all by default)
