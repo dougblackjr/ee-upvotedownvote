@@ -10,7 +10,7 @@ class Upvotedownvote_upd {
 		// Database setup
 		ee()->load->dbforge();
 
-		// Create channel_fields pivot tables (2)
+		// Create module table
 		ee()->dbforge->drop_table('upvotedownvote');
 
 		$fields = array(
@@ -36,6 +36,22 @@ class Upvotedownvote_upd {
 		ee()->dbforge->create_table('upvotedownvote');
 
 		unset($fields);
+
+		// Create actions
+		$data = array(
+			'class'     => 'Upvotedownvote',
+			'method'    => 'upvote'
+		);
+
+		ee()->db->insert('actions', $data);
+
+		unset($data);
+
+		$data = array(
+			'class'     => 'Upvotedownvote',
+			'method'    => 'downvote'
+		);
+		ee()->db->insert('actions', $data);
 
 		// APP INFO
 		$data = array(
