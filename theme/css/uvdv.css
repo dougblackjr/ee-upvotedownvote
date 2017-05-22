@@ -1,0 +1,19 @@
+.upvotedownvote-block {
+	
+}
+
+.upvotedownvote-block .count-li {
+	font-style: bold;
+}
+
+.upvotedownvote-block ul {
+	list-style: none;
+}
+
+.upvotedownvote-block li {
+	display: inline-block;	
+}
+
+.upvotedownvote-block li img {
+	width: 2rem;
+}

@@ -96,6 +96,8 @@ class Upvotedownvote
 
 		// Do the math
 		$count = $data['upvotes'] - $data['downvotes'];
+		$total = $data['upvotes'] + $data['downvotes'];
+		$cssPath = $this->theme_url.'css/uvdv.css';
 		$thumbUpPath = $this->theme_url.'img/thumbsup.svg';
 		$thumbDownPath = $this->theme_url.'img/thumbsdown.svg';
 
@@ -103,7 +105,7 @@ class Upvotedownvote
 		$code = <<< END
 <div class="upvotedownvote-block">
 	<ul>
-		<li class="count-li">$count</li>
+		<li class="count-li">$count <span class="mini">($total votes)</span></li>
 		<li class="thumbup-li"><img src="$thumbUpPath" /></li>
 		<li class="thumbdown-li"><img src="$thumbDownPath" /></li>
 	</ul>
