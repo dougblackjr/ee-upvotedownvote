@@ -1,19 +1,30 @@
 .upvotedownvote-block {
-	
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	width: 60px;
+	background: #4ab3e4;
+	border-radius: 2px;
+	padding: 0.2rem;
 }
 
-.upvotedownvote-block .count-li {
-	font-style: bold;
+.upvotedownvote-block .count {
+	color: white;
+	font-size: 2rem;
 }
 
-.upvotedownvote-block ul {
-	list-style: none;
+.upvotedownvote-block .mini {
+	color: white;
+	font-size: 0.5rem;
+	line-height: 0.7rem;
 }
 
-.upvotedownvote-block li {
-	display: inline-block;	
+.upvotedownvote-block .thumb {
+	font-size: 1.3rem;
+	color: white;
+	cursor: pointer;
 }
 
-.upvotedownvote-block li img {
-	width: 2rem;
+.upvotedownvote-block .success {
+	color: #BB0000;
 }

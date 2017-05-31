@@ -11,6 +11,11 @@ class Upvotedownvote
 		// Global
 		$this->theme_url = URL_THIRD_THEMES."upvotedownvote/";
 
+	}
+
+	public function output()
+	{
+
 		$entry = filter_var(ee()->TMPL->fetch_param('entry'), FILTER_SANITIZE_STRING);
 
 		$display = filter_var(ee()->TMPL->fetch_param('display'), FILTER_SANITIZE_STRING);
@@ -18,6 +23,7 @@ class Upvotedownvote
 		if (!is_null($entry) && !empty($entry)) {
 			// Get data from SQL for that entry
 			ee()->db->select('exp_upvotedownvote.id, exp_upvotedownvote.entry_id, exp_upvotedownvote.upvotes, exp_upvotedownvote.downvotes')
+				->where('entry_id', $entry)
 				->from('exp_upvotedownvote');
 
 			$data = ee()->db->get()->result_array();
@@ -34,11 +40,11 @@ class Upvotedownvote
 			}
 
 			$this->return_data = $this->build($data[0]);
+			return $this->build($data[0]);
 			
 		}
 
 		return NULL;
-
 	}
 
 	/**
@@ -47,6 +53,22 @@ class Upvotedownvote
 	 */
 	public function upvote()
 	{
+		// Get entry id
+		$entry = ee()->input->post('id');
+		// Get it from database
+		ee()->db->select('exp_upvotedownvote.id, exp_upvotedownvote.entry_id, exp_upvotedownvote.upvotes, exp_upvotedownvote.downvotes')
+			->where('entry_id', $entry)
+			->from('exp_upvotedownvote');
+
+		$data = ee()->db->get()->result_array();
+		// Incremement by 1
+		$data['upvotes']++;
+		// Write it
+		
+		ee()->db->update('exp_upvotedownvote', $data, ['id' => $data['id']]);
+		
+		// Return success
+		return 'success';
 
 	}
 
@@ -56,6 +78,22 @@ class Upvotedownvote
 	 */
 	public function downvote()
 	{
+		// Get entry id
+		$entry = ee()->input->post('id');
+		// Get it from database
+		ee()->db->select('exp_upvotedownvote.id, exp_upvotedownvote.entry_id, exp_upvotedownvote.upvotes, exp_upvotedownvote.downvotes')
+			->where('entry_id', $entry)
+			->from('exp_upvotedownvote');
+
+		$data = ee()->db->get()->result_array();
+		// Incremement by 1
+		$data['downvotes']++;
+		// Write it
+		
+		ee()->db->update('exp_upvotedownvote', $data, ['id' => $data['id']]);
+		
+		// Return success
+		return 'success';
 
 	}
 
@@ -97,23 +135,25 @@ class Upvotedownvote
 		// Do the math
 		$count = $data['upvotes'] - $data['downvotes'];
 		$total = $data['upvotes'] + $data['downvotes'];
+		$up = $actions['upvote'];
+		$down = $actions['downvote'];
 		$cssPath = $this->theme_url.'css/uvdv.css';
-		$thumbUpPath = $this->theme_url.'img/thumbsup.svg';
-		$thumbDownPath = $this->theme_url.'img/thumbsdown.svg';
+		$css = file_get_contents($cssPath);
 
 		// Votes
 		$code = <<< END
+<style>$css</style>
 <div class="upvotedownvote-block">
-	<ul>
-		<li class="count-li">$count <span class="mini">($total votes)</span></li>
-		<li class="thumbup-li"><img src="$thumbUpPath" /></li>
-		<li class="thumbdown-li"><img src="$thumbDownPath" /></li>
-	</ul>
+	<div class="count">$count</div>
+	<div class="mini">($total votes)</div>
+	<div class="thumbs">
+		<a href="?ACT=$up"><i id="thumb-up" class="thumb fa fa-thumbs-up"></i></a>
+		<a href="?ACT=$down"><i id="thumb-down" class="thumb fa fa-thumbs-down"></i></a>
+	</div>
 </div>
 END;
 
-		// exit(print_r($actions));
-		// return json_encode($query);
+		// Return the code
 		return $code;
 
 	}
