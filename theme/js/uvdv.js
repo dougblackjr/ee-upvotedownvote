@@ -23,7 +23,20 @@ function upvotedownvote(url, ud) {
 			// Update the divs
 			$('.upvotedownvote-block .count').text(count);
 			$('.upvotedownvote-block .mini').text('('+total+' votes)');
-			$('.upvotedownvote-block .thumbs').remove();
+			
+			if (ud == 'up') {
+				var thumb = $('#uvdv-tu-img').attr('src');
+				thumb = thumb.replace('thumbsup.png', 'thumbsup-success.png');
+				$('#uvdv-tu-img').attr('src', thumb);
+			} else {
+				var thumb = $('#uvdv-td-img').attr('src');
+				thumb = thumb.replace('thumbsdown.png', 'thumbsdown-success.png');
+				$('#uvdv-td-img').attr('src', thumb);
+			}
+
+			$('#thumb-down').prop('onclick', null);
+			$('#thumb-up').prop('onclick', null);
+			
 		},
 		error: function(xhr){
 			console.log(xhr);

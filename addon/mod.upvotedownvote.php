@@ -223,8 +223,8 @@ END;
 	<div class="count">$count</div>
 	<div class="mini">($total votes)</div>
 	<div class="thumbs">
-		<div><a id="thumb-up" onclick="upvotedownvote('?ACT=$up&id=$id','up');"><img src="$tu" class="thumb thumbs-up" /></a></div>
-		<div><a id="thumb-down" onclick="upvotedownvote('?ACT=$down&id=$id','down');"><img src="$td" class="thumb thumbs-down" /></a></div>
+		<div><a id="thumb-up" onclick="upvotedownvote('?ACT=$up&id=$id','up');"><img src="$tu" id="uvdv-tu-img" class="thumb thumbs-up" /></a></div>
+		<div><a id="thumb-down" onclick="upvotedownvote('?ACT=$down&id=$id','down');"><img src="$td" id="uvdv-td-img" class="thumb thumbs-down" /></a></div>
 	</div>
 </div>
 <script src="$js" type="text/javascript" charset="utf-8"></script>
