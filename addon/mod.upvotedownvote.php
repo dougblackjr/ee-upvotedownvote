@@ -22,7 +22,7 @@ class Upvotedownvote
 
 		if (!is_null($entry) && !empty($entry)) {
 			// Get data from SQL for that entry
-			ee()->db->select('exp_upvotedownvote.id, exp_upvotedownvote.entry_id, exp_upvotedownvote.vote)
+			ee()->db->select('exp_upvotedownvote.id, exp_upvotedownvote.entry_id, exp_upvotedownvote.vote')
 				->where('entry_id', $entry)
 				->from('exp_upvotedownvote');
 
@@ -65,7 +65,7 @@ class Upvotedownvote
 			}
 
 			$this->return_data = $this->build($output);
-			return $this->build($data[0]);
+			return $this->build($output);
 			
 		}
 
@@ -79,12 +79,19 @@ class Upvotedownvote
 	public function upvote()
 	{
 		// Get entry id
-		$entry = ee()->input->post('id');
+		$entry = ee()->input->get('id');
 
 		// Write upvote to DB
+		$data = [
+			'entry_id' => $entry,
+			'vote' => 1
+		];
+
+		ee()->db->insert('exp_upvotedownvote', $data);
 		
 		// Return success
-		return 'success';
+		$output = array('up', 'success');
+		ee()->output->send_ajax_response($output);
 
 	}
 
@@ -95,12 +102,19 @@ class Upvotedownvote
 	public function downvote()
 	{
 		// Get entry id
-		$entry = ee()->input->post('id');
+		$entry = ee()->input->get('id');
 
-		// Write upvote to DB
+		// Write downvote to DB
+		$data = [
+			'entry_id' => $entry,
+			'vote' => -1
+		];
+
+		ee()->db->insert('exp_upvotedownvote', $data);
 		
 		// Return success
-		return 'success';
+		$output = array('down', 'success');
+		ee()->output->send_ajax_response($output);
 
 	}
 
@@ -140,11 +154,15 @@ class Upvotedownvote
 		}
 
 		// Do the math
+		$id = $data['entry_id'];
 		$count = $data['upvotes'] - $data['downvotes'];
 		$total = $data['totalvotes'];
 		$up = $actions['upvote'];
 		$down = $actions['downvote'];
 		$cssPath = $this->theme_url.'css/uvdv.css';
+		$js = $this->theme_url.'js/uvdv.js';
+		$tu = $this->theme_url.'img/thumbsup.png';
+		$td = $this->theme_url.'img/thumbsdown.png';
 		$css = file_get_contents($cssPath);
 
 		// Votes
@@ -154,10 +172,11 @@ class Upvotedownvote
 	<div class="count">$count</div>
 	<div class="mini">($total votes)</div>
 	<div class="thumbs">
-		<a href="?ACT=$up"><i id="thumb-up" class="thumb fa fa-thumbs-up"></i></a>
-		<a href="?ACT=$down"><i id="thumb-down" class="thumb fa fa-thumbs-down"></i></a>
+		<div><a id="thumb-up" onclick="upvotedownvote('?ACT=$up&id=$id','up');"><img src="$tu" class="thumb thumbs-up" /></a></div>
+		<div><a id="thumb-down" onclick="upvotedownvote('?ACT=$down&id=$id','down');"><img src="$td" class="thumb thumbs-down" /></a></div>
 	</div>
 </div>
+<script src="$js" type="text/javascript" charset="utf-8"></script>
 END;
 
 		// Return the code

@@ -1,27 +1,19 @@
-function uvdvup() {
-	// Get upvote
+function upvotedownvote(url, ud) {
+	event.preventDefault();
+	
+	// Act on the event
 	$.ajax({
-		url:'?&id=',
+		url:url,
 		type:'POST',
 		success: function(rdata){
 			console.log(rdata);
+			// Get count div
+			// Get total div
+			// Add one to each
+			// Update the divs
 			},
 		error: function(xhr){
 			console.log(xhr);
 		}
 	});
-}
-
-function uvdvdown() {
-	// Get upvote
-	$.ajax({
-		url:'?&id=',
-		type:'POST',
-		success: function(rdata){
-			console.log(rdata);
-			},
-		error: function(xhr){
-			console.log(xhr);
-		}
-	});
-}
+};
