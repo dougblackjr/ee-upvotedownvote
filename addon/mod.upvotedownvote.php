@@ -22,7 +22,7 @@ class Upvotedownvote
 
 		if (!is_null($entry) && !empty($entry)) {
 			// Get data from SQL for that entry
-			ee()->db->select('exp_upvotedownvote.id, exp_upvotedownvote.entry_id, exp_upvotedownvote.upvotes, exp_upvotedownvote.downvotes')
+			ee()->db->select('exp_upvotedownvote.id, exp_upvotedownvote.entry_id, exp_upvotedownvote.vote, exp_upvotedownvote.downvotes')
 				->where('entry_id', $entry)
 				->from('exp_upvotedownvote');
 
@@ -30,16 +30,41 @@ class Upvotedownvote
 
 			// If it's empty
 			if(empty($data)) {
-				$data[0] = array(
+				$output = array(
 					'entry_id' => $entry,
 					'upvotes' => 0,
-					'downvotes' => 0
+					'downvotes' => 0,
+					'totalvotes' => 0
 				);
 
-				ee()->db->insert('exp_upvotedownvote', $data[0]);
+			} else {
+
+				// Set initial variables
+				$upvotes = 0;
+				$downvotes = 0;
+				$totalvotes = 0;
+
+				foreach ($data as $entry_data) {
+					
+					// Add total votes
+					$totalvotes++;
+
+					// Count up and down votes
+					$entry_data['vote'] > 0 ? $upvotes++ : $downvotes++;
+
+				}
+
+				// Set output
+				$output = array(
+					'entry_id' => $entry,
+					'upvotes' => $upvotes,
+					'downvotes' => $downvotes,
+					'totalvotes' => $totalvotes
+				);
+
 			}
 
-			$this->return_data = $this->build($data[0]);
+			$this->return_data = $this->build($output);
 			return $this->build($data[0]);
 			
 		}
@@ -55,17 +80,8 @@ class Upvotedownvote
 	{
 		// Get entry id
 		$entry = ee()->input->post('id');
-		// Get it from database
-		ee()->db->select('exp_upvotedownvote.id, exp_upvotedownvote.entry_id, exp_upvotedownvote.upvotes, exp_upvotedownvote.downvotes')
-			->where('entry_id', $entry)
-			->from('exp_upvotedownvote');
 
-		$data = ee()->db->get()->result_array();
-		// Incremement by 1
-		$data['upvotes']++;
-		// Write it
-		
-		ee()->db->update('exp_upvotedownvote', $data, ['id' => $data['id']]);
+		// Write upvote to DB
 		
 		// Return success
 		return 'success';
@@ -80,17 +96,8 @@ class Upvotedownvote
 	{
 		// Get entry id
 		$entry = ee()->input->post('id');
-		// Get it from database
-		ee()->db->select('exp_upvotedownvote.id, exp_upvotedownvote.entry_id, exp_upvotedownvote.upvotes, exp_upvotedownvote.downvotes')
-			->where('entry_id', $entry)
-			->from('exp_upvotedownvote');
 
-		$data = ee()->db->get()->result_array();
-		// Incremement by 1
-		$data['downvotes']++;
-		// Write it
-		
-		ee()->db->update('exp_upvotedownvote', $data, ['id' => $data['id']]);
+		// Write upvote to DB
 		
 		// Return success
 		return 'success';
@@ -134,7 +141,7 @@ class Upvotedownvote
 
 		// Do the math
 		$count = $data['upvotes'] - $data['downvotes'];
-		$total = $data['upvotes'] + $data['downvotes'];
+		$total = $data['totalvotes'];
 		$up = $actions['upvote'];
 		$down = $actions['downvote'];
 		$cssPath = $this->theme_url.'css/uvdv.css';
