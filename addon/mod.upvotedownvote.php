@@ -4,6 +4,7 @@ class Upvotedownvote
 {
 
 	public $return_data = '';
+	private $_session_data= array();
 
     public function __construct()
 	{
@@ -64,6 +65,11 @@ class Upvotedownvote
 
 			}
 
+			// Get cookie data, if person has voted
+			$output['cookie'] = isset($_COOKIE['uvdv_'.$entry]) ? TRUE : FALSE;
+			$output['cookie_value'] = isset($_COOKIE['uvdv_'.$entry]) ? $_COOKIE['uvdv_'.$entry] : FALSE;
+
+			// Return it
 			$this->return_data = $this->build($output);
 			return $this->build($output);
 			
@@ -88,6 +94,9 @@ class Upvotedownvote
 		];
 
 		ee()->db->insert('exp_upvotedownvote', $data);
+
+		// Set cookie
+		setcookie('uvdv_'.$entry, 'up');
 		
 		// Return success
 		$output = array('up', 'success');
@@ -111,6 +120,9 @@ class Upvotedownvote
 		];
 
 		ee()->db->insert('exp_upvotedownvote', $data);
+
+		// Set cookie
+		setcookie('uvdv_'.$entry, 'down');
 		
 		// Return success
 		$output = array('down', 'success');
@@ -163,10 +175,49 @@ class Upvotedownvote
 		$js = $this->theme_url.'js/uvdv.js';
 		$tu = $this->theme_url.'img/thumbsup.png';
 		$td = $this->theme_url.'img/thumbsdown.png';
+		$tus = $this->theme_url.'img/thumbsup-success.png';
+		$tds = $this->theme_url.'img/thumbsdown-success.png';
 		$css = file_get_contents($cssPath);
 
-		// Votes
-		$code = <<< END
+		if ($data['cookie']) {
+			
+			if ($data['cookie_value'] == 'up') {
+				// Votes
+				$code = <<< END
+<style>$css</style>
+<div class="upvotedownvote-block">
+	<div class="count">$count</div>
+	<div class="mini">($total votes)</div>
+	<div class="thumbs">
+		<div><img src="$tus" class="thumb thumbs-up" /></div>
+		<div><img src="$td" class="thumb thumbs-down" /></div>
+	</div>
+</div>
+<script src="$js" type="text/javascript" charset="utf-8"></script>
+END;
+
+			} else {
+
+				// Votes
+				$code = <<< END
+<style>$css</style>
+<div class="upvotedownvote-block">
+	<div class="count">$count</div>
+	<div class="mini">($total votes)</div>
+	<div class="thumbs">
+		<div><img src="$tu" class="thumb thumbs-up" /></div>
+		<div><img src="$tds" class="thumb thumbs-down" /></div>
+	</div>
+</div>
+<script src="$js" type="text/javascript" charset="utf-8"></script>
+END;
+
+			}
+
+		} else {
+
+			// Votes
+			$code = <<< END
 <style>$css</style>
 <div class="upvotedownvote-block">
 	<div class="count">$count</div>
@@ -178,6 +229,8 @@ class Upvotedownvote
 </div>
 <script src="$js" type="text/javascript" charset="utf-8"></script>
 END;
+
+		}
 
 		// Return the code
 		return $code;

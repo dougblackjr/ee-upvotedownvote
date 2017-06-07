@@ -23,6 +23,7 @@ function upvotedownvote(url, ud) {
 			// Update the divs
 			$('.upvotedownvote-block .count').text(count);
 			$('.upvotedownvote-block .mini').text('('+total+' votes)');
+			$('.upvotedownvote-block .thumbs').remove();
 		},
 		error: function(xhr){
 			console.log(xhr);
