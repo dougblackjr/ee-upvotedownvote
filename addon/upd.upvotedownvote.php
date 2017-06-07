@@ -19,14 +19,9 @@ class Upvotedownvote_upd {
 				'constraint' => 5,
 				'unsigned' => TRUE			
 			),
-			'upvotes' => array(
+			'vote' => array(
 				'type' => 'INT',
-				'constraint' => 5,
-				'unsigned' => TRUE
-			),
-			'downvotes' => array(
-				'type' => 'INT',
-				'constraint' => 5,
+				'constraint' => 1,
 				'unsigned' => TRUE
 			)
 		);

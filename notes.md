@@ -14,8 +14,7 @@ NUMBER - UP - DOWN
 ### Database
 + id: auto
 + entry_id: integer
-+ upvotes: integer
-+ downvotes: integer
++ vote: integer (either 1 or -1)
 
 ### Module
 Module will get entry and display
