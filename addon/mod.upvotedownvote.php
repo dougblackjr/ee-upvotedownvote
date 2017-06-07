@@ -22,7 +22,7 @@ class Upvotedownvote
 
 		if (!is_null($entry) && !empty($entry)) {
 			// Get data from SQL for that entry
-			ee()->db->select('exp_upvotedownvote.id, exp_upvotedownvote.entry_id, exp_upvotedownvote.vote, exp_upvotedownvote.downvotes')
+			ee()->db->select('exp_upvotedownvote.id, exp_upvotedownvote.entry_id, exp_upvotedownvote.vote)
 				->where('entry_id', $entry)
 				->from('exp_upvotedownvote');
 
