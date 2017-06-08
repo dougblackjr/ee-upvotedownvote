@@ -70,8 +70,8 @@ class Upvotedownvote
 			$output['cookie_value'] = isset($_COOKIE['uvdv_'.$entry]) ? $_COOKIE['uvdv_'.$entry] : FALSE;
 
 			// Return it
-			$this->return_data = $this->build($output);
-			return $this->build($output);
+			$this->return_data = ee()->TMPL->parse_variables_row(ee()->TMPL->tagdata, $this->build($output));
+			return ee()->TMPL->parse_variables_row(ee()->TMPL->tagdata, $this->build($output));
 			
 		}
 
@@ -166,74 +166,19 @@ class Upvotedownvote
 		}
 
 		// Do the math
-		$id = $data['entry_id'];
-		$count = $data['upvotes'] - $data['downvotes'];
-		$total = $data['totalvotes'];
-		$up = $actions['upvote'];
-		$down = $actions['downvote'];
-		$cssPath = $this->theme_url.'css/uvdv.css';
-		$js = $this->theme_url.'js/uvdv.js';
-		$tu = $this->theme_url.'img/thumbsup.png';
-		$td = $this->theme_url.'img/thumbsdown.png';
-		$tus = $this->theme_url.'img/thumbsup-success.png';
-		$tds = $this->theme_url.'img/thumbsdown-success.png';
-		$css = file_get_contents($cssPath);
+		
+		$variables = array(
+			'score' => $data['upvotes'] - $data['downvotes'],
+			'count' => $data['totalvotes'],
+			'upvotes' => $data['upvotes'],
+			'downvotes' => $data['downvotes'],
+			'up_action' => $actions['upvote'],
+			'down_action' => $actions['downvote'],
+			'cookie' => $data['cookie'],
+			'cookie_value' => $data['cookie_value']
+		);
 
-		if ($data['cookie']) {
-			
-			if ($data['cookie_value'] == 'up') {
-				// Votes
-				$code = <<< END
-<style>$css</style>
-<div class="upvotedownvote-block">
-	<div class="count">$count</div>
-	<div class="mini">($total votes)</div>
-	<div class="thumbs">
-		<div><img src="$tus" class="thumb thumbs-up" /></div>
-		<div><img src="$td" class="thumb thumbs-down" /></div>
-	</div>
-</div>
-<script src="$js" type="text/javascript" charset="utf-8"></script>
-END;
-
-			} else {
-
-				// Votes
-				$code = <<< END
-<style>$css</style>
-<div class="upvotedownvote-block">
-	<div class="count">$count</div>
-	<div class="mini">($total votes)</div>
-	<div class="thumbs">
-		<div><img src="$tu" class="thumb thumbs-up" /></div>
-		<div><img src="$tds" class="thumb thumbs-down" /></div>
-	</div>
-</div>
-<script src="$js" type="text/javascript" charset="utf-8"></script>
-END;
-
-			}
-
-		} else {
-
-			// Votes
-			$code = <<< END
-<style>$css</style>
-<div class="upvotedownvote-block">
-	<div class="count">$count</div>
-	<div class="mini">($total votes)</div>
-	<div class="thumbs">
-		<div><a id="thumb-up" onclick="upvotedownvote('?ACT=$up&id=$id','up');"><img src="$tu" id="uvdv-tu-img" class="thumb thumbs-up" /></a></div>
-		<div><a id="thumb-down" onclick="upvotedownvote('?ACT=$down&id=$id','down');"><img src="$td" id="uvdv-td-img" class="thumb thumbs-down" /></a></div>
-	</div>
-</div>
-<script src="$js" type="text/javascript" charset="utf-8"></script>
-END;
-
-		}
-
-		// Return the code
-		return $code;
+		return $variables;
 
 	}
 
