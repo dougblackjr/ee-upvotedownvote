@@ -18,7 +18,6 @@ DOWNVOTES: Total # of downvotes
 UP_ACTION: Number of action to call to log an upvote
 DOWN_ACTION: Number of action to call to log an downvote
 
-
 ### Widget Code
 
 Some widget code with JS and CSS is included in the theme. Feel free to make your own:
