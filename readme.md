@@ -1,5 +1,8 @@
 # UpvoteDownvote
 
+## Requirements
+Currently, this addon requires jQuery on the front end.
+
 ## Instructions
 Add
 
